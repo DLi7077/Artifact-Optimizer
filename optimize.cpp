@@ -1,7 +1,6 @@
-#include "./artifact.h"
-#include "./constants.h"
+#include "./Artifact/artifact.h"
+#include "./Constants/constants.h"
 #include "./generate.h"
-#include "./stat.h"
 
 using namespace std;
 
@@ -23,7 +22,9 @@ int main() {
       CRIT_RATE,
       CRIT_DAMAGE};
 
-  vector<vector<string>> possibleStartingStats = Generate::generateStartingStats(substat_labels, 4);
+  // vector<vector<string>> possibleStartingStats = Generate::generateStartingStats(substat_labels, 4);
+
+  vector<Artifact> startingArtifacts = Generate::generateStartingArtifacts(substat_labels);
 
   std::array<std::string, SUBSTAT_COUNT> list = {
       ATK_PERCENT,
@@ -31,9 +32,9 @@ int main() {
       CRIT_RATE,
       ELEMENTAL_MASTERY};
 
-  Artifact x(list);
+  Artifact x(list, HP_PERCENT);
 
-  vector<Artifact> result = Generate::generateArtifactOutcomes(x);
+  // vector<Artifact> result = Generate::generateArtifactOutcomes(x);
 
   cout << "\n===============================\n"
        << "Program terminated successfully"

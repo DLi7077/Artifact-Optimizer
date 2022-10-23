@@ -1,19 +1,23 @@
 #pragma once
+#include "../Constants/utils.h"
 #include "./stat.h"
-#include "./utils.h"
 
 class Artifact {
  public:
   // one-param constructor
-  Artifact(const std::array<std::string, SUBSTAT_COUNT>& rhs) {
+  Artifact(const std::array<std::string, SUBSTAT_COUNT>& substats, std::string mainStat) {
+    main_stat_ = Stat(mainStat);
+    main_stat_.setMainStat();
+    std::cout << main_stat_;
     substats_ = new Stat[SUBSTAT_COUNT];
     for (size_t i = 0; i < SUBSTAT_COUNT; i++) {
-      substats_[i] = Stat(rhs[i]);
+      substats_[i] = Stat(substats[i]);
     }
   }
 
   // copy constructor
   Artifact(const Artifact& rhs) {
+    main_stat_ = Stat(rhs.main_stat_);
     substats_ = new Stat[SUBSTAT_COUNT];
 
     for (size_t i = 0; i < SUBSTAT_COUNT; i++) {
@@ -23,7 +27,7 @@ class Artifact {
 
   // move constructor
   Artifact(Artifact&& rhs) {
-    std::cout << "movec";
+    main_stat_ = Stat(rhs.main_stat_);
     substats_ = new Stat[SUBSTAT_COUNT];
 
     for (size_t i = 0; i < SUBSTAT_COUNT; i++) {
@@ -35,8 +39,7 @@ class Artifact {
 
   // move assignment
   Artifact& operator=(Artifact&& rhs) {
-    std::cout << "movea";
-
+    std::swap(main_stat_, rhs.main_stat_);
     std::swap(substats_, rhs.substats_);
 
     return *this;
@@ -63,6 +66,7 @@ class Artifact {
   }
 
   friend std::ostream& operator<<(std::ostream& out, const Artifact& rhs) {
+    out << rhs.main_stat_;
     for (int i = 0; i < SUBSTAT_COUNT; i++) {
       out << rhs.substats_[i];
     }
@@ -72,4 +76,5 @@ class Artifact {
 
  private:
   Stat* substats_;
+  Stat main_stat_;
 };

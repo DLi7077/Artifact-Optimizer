@@ -1,6 +1,6 @@
 #pragma once
-#include "./artifact.h"
-#include "./utils.h"
+#include "./Artifact/artifact.h"
+#include "./Constants/utils.h"
 
 using namespace std;
 
@@ -44,10 +44,33 @@ class Generate {
     return result;
   }
 
+  static vector<Artifact> generateStartingArtifacts(vector<string> &substats) {
+    vector<Artifact> result;
+    for (int i = 0; i < substats.size(); i++) {
+      string mainStat = substats[i];
+      vector<string> substatPools = substats;
+      substatPools.erase(substatPools.begin() + i);
+
+      vector<vector<string>> startingStats = generateStartingStats(substatPools, SUBSTAT_COUNT);
+      for (vector<string> &startingStat : startingStats) {
+        array<string, SUBSTAT_COUNT> startingSubstats;
+
+        for (int i = 0; i < SUBSTAT_COUNT; i++) {
+          startingSubstats[i] = move(startingStat[i]);
+          cout << startingSubstats[i] << "\n";
+        }
+
+        // result.push_back(Artifact({}, mainStat));
+      }
+    }
+
+    return result;
+  }
+
   /**
    * @brief Given an artifact, generates all possible outcomes using max rolls
-   * 
-   * @param artifact An artifact with no extra rolls at lv. 0 
+   *
+   * @param artifact An artifact with no extra rolls at lv. 0
    * @return vector<Artifact> A list of all possible outcomes
    */
   static vector<Artifact> generateArtifactOutcomes(const Artifact &artifact) {
@@ -59,7 +82,7 @@ class Generate {
       Artifact &curr = outcomes[roll];
 
       for (size_t value = 0; value < SUBSTAT_COUNT; value++) {
-        curr[value] += rollDistributions[roll][value];
+        curr[value].addRolls(rollDistributions[roll][value]);
       }
       cout << curr;
     }

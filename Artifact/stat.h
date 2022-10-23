@@ -1,6 +1,6 @@
 #pragma once
-#include "./constants.h"
-#include "./utils.h"
+#include "../Constants/constants.h"
+#include "../Constants/utils.h"
 
 class Stat {
  public:
@@ -52,16 +52,20 @@ class Stat {
     value_ = 0;
   }
 
+  // simulate roll
+  void addRolls(int rolls) {
+    double value = Constants::getMaxRollMapping()[this->label_];
+    value_ += rolls * value;
+    return;
+  }
+
+  void setMainStat() {
+    value_ = 99;
+  }
+
   friend std::ostream& operator<<(std::ostream& out, const Stat& rhs) {
     std::cout << rhs.label_ << " " << rhs.value_ << "\n";
     return out;
-  }
-
-  // simulate roll
-  void operator+=(int rolls) {
-    double value = Constants::getMaxRollMapping()[this->label_];
-    this->value_ += rolls * value;
-    return;
   }
 
  private:
