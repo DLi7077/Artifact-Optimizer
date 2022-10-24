@@ -8,7 +8,6 @@ class Artifact {
   Artifact(const std::array<std::string, SUBSTAT_COUNT>& substats, std::string mainStat) {
     main_stat_ = Stat(mainStat);
     main_stat_.setMainStat();
-    std::cout << main_stat_;
     substats_ = new Stat[SUBSTAT_COUNT];
     for (size_t i = 0; i < SUBSTAT_COUNT; i++) {
       substats_[i] = Stat(substats[i]);
@@ -66,7 +65,7 @@ class Artifact {
   }
 
   friend std::ostream& operator<<(std::ostream& out, const Artifact& rhs) {
-    out << rhs.main_stat_;
+    out << "main:\t" << rhs.main_stat_;
     for (int i = 0; i < SUBSTAT_COUNT; i++) {
       out << rhs.substats_[i];
     }

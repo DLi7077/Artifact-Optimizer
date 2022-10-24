@@ -13,7 +13,7 @@ class Stat {
   // one-param
   Stat(std::string label) {
     label_ = label;
-    value_ = Constants::getMaxRollMapping()[label];
+    value_ = Constants::substat_max_roll_mapping_[label];
   }
 
   // copy constructor
@@ -54,13 +54,13 @@ class Stat {
 
   // simulate roll
   void addRolls(int rolls) {
-    double value = Constants::getMaxRollMapping()[this->label_];
+    double value = Constants::substat_max_roll_mapping_[this->label_];
     value_ += rolls * value;
     return;
   }
 
   void setMainStat() {
-    value_ = 99;
+    value_ = Constants::main_stat_max_roll_mapping_[label_];
   }
 
   friend std::ostream& operator<<(std::ostream& out, const Stat& rhs) {

@@ -23,8 +23,8 @@ class Generate {
     return result;
   }
 
-  // Generates Combinations of starting substats - Leetcode Combinations
-  template <typename Object>
+  // Generates Combinations of starting N substats - Leetcode Combinations
+  template <class Object>
   static vector<vector<Object>> generateStartingStats(vector<Object> &substats, int startingStats, int start = 0) {
     if (start == substats.size() || startingStats <= 0) {
       return {{}};
@@ -44,24 +44,25 @@ class Generate {
     return result;
   }
 
-  static vector<Artifact> generateStartingArtifacts(vector<string> &substats) {
+  /**
+   * @brief Generates all starting artifact stats given a main stat and possible substats
+   * @param mainStat The artifact's main stat
+   * @param substats Possible substats
+   * @return vector<Artifact> a list of lv.0 artifacts
+   */
+  static vector<Artifact> generateStartingArtifacts(string mainStat, vector<string> &substats) {
     vector<Artifact> result;
-    for (int i = 0; i < substats.size(); i++) {
-      string mainStat = substats[i];
-      vector<string> substatPools = substats;
-      substatPools.erase(substatPools.begin() + i);
 
-      vector<vector<string>> startingStats = generateStartingStats(substatPools, SUBSTAT_COUNT);
-      for (vector<string> &startingStat : startingStats) {
-        array<string, SUBSTAT_COUNT> startingSubstats;
+    vector<vector<string>> startingStats = generateStartingStats(substats, SUBSTAT_COUNT);
+    for (vector<string> &startingStat : startingStats) {  // possible starting stats using pool
+      // convert to std::array
+      array<string, SUBSTAT_COUNT> startingSubstats;
 
-        for (int i = 0; i < SUBSTAT_COUNT; i++) {
-          startingSubstats[i] = move(startingStat[i]);
-          cout << startingSubstats[i] << "\n";
-        }
-
-        // result.push_back(Artifact({}, mainStat));
+      for (int i = 0; i < SUBSTAT_COUNT; i++) {
+        startingSubstats[i] = move(startingStat[i]);
       }
+
+      result.push_back(Artifact(startingSubstats, mainStat));
     }
 
     return result;
@@ -74,7 +75,8 @@ class Generate {
    * @return vector<Artifact> A list of all possible outcomes
    */
   static vector<Artifact> generateArtifactOutcomes(const Artifact &artifact) {
-    vector<vector<int>> rollDistributions = generateRolls(SUBSTAT_COUNT, ROLL_COUNT);
+    static vector<vector<int>> rollDistributions = generateRolls(SUBSTAT_COUNT, ROLL_COUNT);
+
     vector<Artifact> outcomes(rollDistributions.size(), artifact);
 
     // add rolls to each copy artifact
@@ -84,7 +86,6 @@ class Generate {
       for (size_t value = 0; value < SUBSTAT_COUNT; value++) {
         curr[value].addRolls(rollDistributions[roll][value]);
       }
-      cout << curr;
     }
 
     return outcomes;
