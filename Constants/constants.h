@@ -14,6 +14,13 @@
 #define ELEMENTAL_DAMAGE_BONUS "Elemental Damage Bonus"
 #define PHYSICAL_DAMAGE_BONUS "Physical Damage Bonus"
 
+#define BASE_ATTACK "Base Attack"
+#define BASE_HP "Base HP"
+#define BASE_DEFENSE "Base Defense"
+#define FLAT_ATTACK "Flat Attack"
+#define FlAT_HP "Flat HP"
+#define FLAT_DEFENSE "Flat Defense"
+
 #define MAX_ATK_ROLL 19.45
 #define MAX_ATK_PERCENT_ROLL 5.83
 #define MAX_HP_ROLL 298.75
@@ -65,6 +72,14 @@
   { ATK_PERCENT, HP_PERCENT, DEF_PERCENT, ELEMENTAL_MASTERY, ELEMENTAL_DAMAGE_BONUS, PHYSICAL_DAMAGE_BONUS }
 #define CIRCLET_SUBSTATS \
   { ATK_PERCENT, HP_PERCENT, DEF_PERCENT, ELEMENTAL_MASTERY, CRIT_RATE, CRIT_DAMAGE }
+
+#define ANEMO "Anemo"
+#define CRYO "Cryo"
+#define DENDRO "Dendro"
+#define ELECTRO "Electro"
+#define HYDRO "Hydro"
+#define PYRO "Pyro"
+#define PHYSICAL "Physical"
 
 namespace Constants {
 
@@ -118,5 +133,23 @@ std::unordered_map<std::string, std::vector<std::string>> artifact_main_stats_ =
     {GOBLET, GOBLET_MAIN_STATS},
     {CIRCLET, CIRCLET_MAIN_STATS},
 };
+
+std::vector<std::string> valid_elements_ = {
+    ANEMO,
+    CRYO,
+    DENDRO,
+    ELECTRO,
+    HYDRO,
+    PYRO,
+    PHYSICAL,
+};
+
+bool validateElement(std::string label) {
+  for (const std::string& element : valid_elements_) {
+    if (label == element) return true;
+  }
+
+  return false;
+}
 
 };  // namespace Constants
