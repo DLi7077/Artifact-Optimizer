@@ -4,20 +4,22 @@
 
 class Artifact {
  public:
-  // one-param constructor
+  // two-param constructor
   Artifact(const std::array<std::string, SUBSTAT_COUNT>& substats, std::string mainStat) {
     main_stat_ = Stat(mainStat);
     main_stat_.setMainStat();
-    substats_ = new Stat[SUBSTAT_COUNT];
+
+    substats_ = new Stat*[SUBSTAT_COUNT];
+    
     for (size_t i = 0; i < SUBSTAT_COUNT; i++) {
-      substats_[i] = Stat(substats[i]);
+      substats_[i] = new Stat(substats[i]);
     }
   }
 
   // copy constructor
   Artifact(const Artifact& rhs) {
     main_stat_ = Stat(rhs.main_stat_);
-    substats_ = new Stat[SUBSTAT_COUNT];
+    substats_ = new Stat*[SUBSTAT_COUNT];
 
     for (size_t i = 0; i < SUBSTAT_COUNT; i++) {
       substats_[i] = rhs.substats_[i];  // only possible due to copy assignment
@@ -27,7 +29,7 @@ class Artifact {
   // move constructor
   Artifact(Artifact&& rhs) {
     main_stat_ = Stat(rhs.main_stat_);
-    substats_ = new Stat[SUBSTAT_COUNT];
+    substats_ = new Stat*[SUBSTAT_COUNT];
 
     for (size_t i = 0; i < SUBSTAT_COUNT; i++) {
       substats_[i] = rhs.substats_[i];
@@ -61,19 +63,19 @@ class Artifact {
       abort();
     }
 
-    return substats_[location];
+    return *substats_[location];
   }
 
   friend std::ostream& operator<<(std::ostream& out, const Artifact& rhs) {
     out << "main:\t" << rhs.main_stat_;
     for (int i = 0; i < SUBSTAT_COUNT; i++) {
-      out << rhs.substats_[i];
+      out << *rhs.substats_[i];
     }
     out << "\n";
     return out;
   }
 
  private:
-  Stat* substats_;
+  Stat** substats_;
   Stat main_stat_;
 };

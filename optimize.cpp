@@ -1,5 +1,6 @@
 #include "./Artifact/artifact.h"
 #include "./Constants/constants.h"
+#include "./Constants/utils.h"
 #include "./generate.h"
 
 using namespace std;
@@ -70,6 +71,6 @@ int main() {
   cout
       << "\n===============================\n"
       << "Program terminated successfully"
-      << "\n===============================";
+      << "\n===============================\n";
   return 0;
 }
