@@ -29,6 +29,11 @@ PROGRAM_0=optimize
 $(PROGRAM_0): $(ALL_OBJ0)
 	g++ $(C++FLAG) -o $(EXEC_DIR)/$@ $(ALL_OBJ0) $(INCLUDES) $(LIBS_ALL)
 
+# ONETH PROGRAM
+ALL_OBJ1=Game/DamageCalculator.o
+PROGRAM_1=DamageCalculator
+$(PROGRAM_1): $(ALL_OBJ1)
+	g++ $(C++FLAG) -o $(EXEC_DIR)/$@ $(ALL_OBJ1) $(INCLUDES) $(LIBS_ALL)
 # Compiling all
 
 all:

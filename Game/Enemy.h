@@ -1,6 +1,6 @@
 #pragma once
-#include "Constants/constants.h"
-#include "Constants/utils.h"
+#include "../Constants/constants.h"
+#include "../Constants/utils.h"
 
 class Enemy {
  private:
@@ -38,9 +38,3 @@ class Enemy {
     return resistance_percent_[element];
   }
 };
-
-Enemy::Enemy(/* args */) {
-}
-
-Enemy::~Enemy() {
-}

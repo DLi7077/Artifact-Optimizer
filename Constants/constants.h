@@ -9,8 +9,8 @@
 #define DEF_PERCENT "DEF%"
 #define ELEMENTAL_MASTERY "EM"
 #define ENERGY_RECHARGE "ER%"
-#define CRIT_RATE "Crit Rate%"
-#define CRIT_DAMAGE "Crit Dmg%"
+#define CRIT_RATE "Crit Rate"
+#define CRIT_DAMAGE "Crit Damage"
 #define ELEMENTAL_DAMAGE_BONUS "Elemental Damage Bonus"
 #define PHYSICAL_DAMAGE_BONUS "Physical Damage Bonus"
 
