@@ -9,33 +9,27 @@ class Artifact {
     main_stat_ = Stat(mainStat);
     main_stat_.setMainStat();
 
-    substats_ = new Stat*[SUBSTAT_COUNT];
-    
     for (size_t i = 0; i < SUBSTAT_COUNT; i++) {
-      substats_[i] = new Stat(substats[i]);
+      substats_[i] = Stat(substats[i]);
     }
   }
 
   // copy constructor
   Artifact(const Artifact& rhs) {
     main_stat_ = Stat(rhs.main_stat_);
-    substats_ = new Stat*[SUBSTAT_COUNT];
 
     for (size_t i = 0; i < SUBSTAT_COUNT; i++) {
-      substats_[i] = rhs.substats_[i];  // only possible due to copy assignment
+      substats_[i] = Stat(rhs.substats_[i]);  // only possible due to copy assignment
     }
   }
 
   // move constructor
   Artifact(Artifact&& rhs) {
     main_stat_ = Stat(rhs.main_stat_);
-    substats_ = new Stat*[SUBSTAT_COUNT];
 
     for (size_t i = 0; i < SUBSTAT_COUNT; i++) {
       substats_[i] = rhs.substats_[i];
     }
-
-    rhs.substats_ = nullptr;
   }
 
   // move assignment
@@ -47,10 +41,6 @@ class Artifact {
   }
 
   ~Artifact() {
-    if (substats_) {
-      delete substats_;
-      substats_ = nullptr;
-    }
   }
 
   int size() const {
@@ -63,19 +53,19 @@ class Artifact {
       abort();
     }
 
-    return *substats_[location];
+    return substats_[location];
   }
 
   friend std::ostream& operator<<(std::ostream& out, const Artifact& rhs) {
     out << "main:\t" << rhs.main_stat_;
     for (int i = 0; i < SUBSTAT_COUNT; i++) {
-      out << *rhs.substats_[i];
+      out << rhs.substats_[i];
     }
     out << "\n";
     return out;
   }
 
  private:
-  Stat** substats_;
+  std::array<Stat, SUBSTAT_COUNT> substats_;
   Stat main_stat_;
 };

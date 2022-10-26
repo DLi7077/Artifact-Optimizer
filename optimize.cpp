@@ -33,6 +33,7 @@ vector<Artifact> generateArtifactsForPiece(string pieceName) {
 
       // add every possible roll outcome for every artifact to result
       for (Artifact& rollResult : artifactRollResults) {
+        cout << rollResult;
         result.push_back(move(rollResult));
       }
     }
@@ -46,16 +47,22 @@ int main() {
   int roll_count = 5;
 
   vector<Artifact> FlowerArtifacts = generateArtifactsForPiece(FLOWER);
-  vector<Artifact> FeatherArtifacts = generateArtifactsForPiece(FEATHER);
-  vector<Artifact> SandsArtifacts = generateArtifactsForPiece(SANDS);
-  vector<Artifact> GobletArtifacts = generateArtifactsForPiece(GOBLET);
-  vector<Artifact> CircletArtifacts = generateArtifactsForPiece(CIRCLET);
+  // vector<Artifact> FeatherArtifacts = generateArtifactsForPiece(FEATHER);
+  // vector<Artifact> SandsArtifacts = generateArtifactsForPiece(SANDS);
+  // vector<Artifact> GobletArtifacts = generateArtifactsForPiece(GOBLET);
+  // vector<Artifact> CircletArtifacts = generateArtifactsForPiece(CIRCLET);
 
   cout << "Flower Artifacts:\t" << FlowerArtifacts.size() << "\n";
-  cout << "Feather Artifacts:\t" << FeatherArtifacts.size() << "\n";
-  cout << "Sands Artifacts:\t" << SandsArtifacts.size() << "\n";
-  cout << "Goblet Artifacts:\t" << GobletArtifacts.size() << "\n";
-  cout << "Circlet Artifacts:\t" << CircletArtifacts.size() << "\n";
+  // cout << "Feather Artifacts:\t" << FeatherArtifacts.size() << "\n";
+  // cout << "Sands Artifacts:\t" << SandsArtifacts.size() << "\n";
+  // cout << "Goblet Artifacts:\t" << GobletArtifacts.size() << "\n";
+  // cout << "Circlet Artifacts:\t" << CircletArtifacts.size() << "\n";
+
+  Artifact base = FlowerArtifacts[125];
+  cout << base;
+  // vector<Artifact> artifactRollResults = Generate::generateArtifactOutcomes(base);
+
+  // for (Artifact& x : artifactRollResults) cout << x;
 
   cout
       << "\n===============================\n"
