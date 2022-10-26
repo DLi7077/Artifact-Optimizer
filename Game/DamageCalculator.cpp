@@ -10,9 +10,9 @@ namespace Calculator {
 using namespace std;
 int main() {
   Character test;
-  test.setStat(BASE_ATTACK, 700);
+  test.setStat(BASE_ATK, 700);
   test.setStat(ATK_PERCENT, 100);
-  test.setStat(FLAT_ATTACK, 1);
+  test.setStat(FLAT_ATK, 1);
   StatModel x = test.finalStats();
 
   cout << test;

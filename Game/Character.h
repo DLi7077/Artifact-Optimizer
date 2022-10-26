@@ -1,9 +1,14 @@
 #pragma once
 #include "../Artifact/artifact.h"
+#include "../Constants/constants.h"
 #include "../Constants/utils.h"
 
 #define SKILL_DAMAGE_SCALING "Skill Damage %"
 #define BURST_DAMAGE_SCALING "Burst Damage %"
+
+#define DEFAULT_BASE_ATK 800
+#define DEFAULT_BASE_HP 10000
+#define DEFAULT_BASE_DEF 200
 
 struct StatModel {
   double total_attack;
@@ -30,15 +35,15 @@ class Character {
   StatModel final_stats_;
 
   void InitCharacterStats() {
-    stats_[BASE_ATTACK] = 0;
-    stats_[BASE_HP] = 0;
-    stats_[BASE_DEFENSE] = 0;
+    stats_[BASE_ATK] = DEFAULT_BASE_ATK;
+    stats_[BASE_HP] = DEFAULT_BASE_HP;
+    stats_[BASE_DEFENSE] = DEFAULT_BASE_DEF;
     stats_[ATK_PERCENT] = 0;
     stats_[HP_PERCENT] = 0;
     stats_[DEF_PERCENT] = 0;
-    stats_[FLAT_ATTACK] = 0;
-    stats_[FlAT_HP] = 0;
-    stats_[FLAT_DEFENSE] = 0;
+    stats_[FLAT_ATK] = 0;
+    stats_[FLAT_HP] = 0;
+    stats_[FLAT_DEF] = 0;
     stats_[ELEMENTAL_MASTERY] = 0;
     stats_[ENERGY_RECHARGE] = 1;
     stats_[CRIT_RATE] = .05;
@@ -61,9 +66,9 @@ class Character {
   }
 
   void updateStatModel() {
-    final_stats_.total_attack = stats_[BASE_ATTACK] * stats_[ATK_PERCENT] + stats_[FLAT_ATTACK];
-    final_stats_.total_hp = stats_[BASE_HP] * stats_[HP_PERCENT] + stats_[FlAT_HP];
-    final_stats_.total_defense = stats_[BASE_DEFENSE] * stats_[DEF_PERCENT] + stats_[FLAT_DEFENSE];
+    final_stats_.total_attack = stats_[BASE_ATK] * (1 + stats_[ATK_PERCENT]) + stats_[FLAT_ATK];
+    final_stats_.total_hp = stats_[BASE_HP] * (1 + stats_[HP_PERCENT]) + stats_[FLAT_HP];
+    final_stats_.total_defense = stats_[BASE_DEFENSE] * (1 + stats_[DEF_PERCENT]) + stats_[FLAT_DEF];
     final_stats_.elemental_mastery = stats_[ELEMENTAL_MASTERY];
     final_stats_.energy_recharge = stats_[ENERGY_RECHARGE];
     final_stats_.crit_rate = stats_[CRIT_RATE];
@@ -75,6 +80,30 @@ class Character {
     final_stats_.damage_bonus_hydro = damage_bonus_[HYDRO];
     final_stats_.damage_bonus_pyro = damage_bonus_[PYRO];
     final_stats_.damage_bonus_physical = damage_bonus_[PHYSICAL];
+  }
+
+  bool isDmgBonus(std::string& label) {
+    if (label == ANEMO_DAMAGE_BONUS) return true;
+    if (label == CRYO_DAMAGE_BONUS) return true;
+    if (label == DENDRO_DAMAGE_BONUS) return true;
+    if (label == ELECTRO_DAMAGE_BONUS) return true;
+    if (label == HYDRO_DAMAGE_BONUS) return true;
+    if (label == PYRO_DAMAGE_BONUS) return true;
+    if (label == PHYSICAL_DAMAGE_BONUS) return true;
+
+    return false;
+  }
+
+  std::string labelCastToElement(std::string& label) {
+    if (label == ANEMO_DAMAGE_BONUS) return ANEMO;
+    if (label == CRYO_DAMAGE_BONUS) return CRYO;
+    if (label == DENDRO_DAMAGE_BONUS) return DENDRO;
+    if (label == ELECTRO_DAMAGE_BONUS) return ELECTRO;
+    if (label == HYDRO_DAMAGE_BONUS) return HYDRO;
+    if (label == PYRO_DAMAGE_BONUS) return PYRO;
+    if (label == PHYSICAL_DAMAGE_BONUS) return PHYSICAL;
+
+    return label;
   }
 
  public:
@@ -108,8 +137,41 @@ class Character {
     return final_stats_;
   }
 
+  void addArtifact(Artifact& artifact) {
+    Stat mainStat = artifact.mainStat();
+    std::string mainLabel = mainStat.label();
+    std::unordered_map<std::string, double>& stats = isDmgBonus(mainLabel) ? damage_bonus_ : stats_;
+    mainLabel = labelCastToElement(mainStat.label());
+
+    stats[mainLabel] += mainStat.value();
+
+    for (size_t i = 0; i < artifact.size(); i++) {
+      std::string statLabel = artifact[i].label();
+      stats[statLabel] += artifact[i].value();
+    }
+
+    updateStatModel();
+  }
+
+  void removeArtifact(Artifact& artifact) {
+    Stat mainStat = artifact.mainStat();
+    std::string mainLabel = mainStat.label();
+    std::unordered_map<std::string, double>& stats = isDmgBonus(mainLabel) ? damage_bonus_ : stats_;
+    mainLabel = labelCastToElement(mainStat.label());
+
+    stats[mainLabel] -= mainStat.value();
+
+    for (size_t i = 0; i < artifact.size(); i++) {
+      std::string statLabel = artifact[i].label();
+
+      stats[statLabel] -= artifact[i].value();
+    }
+
+    updateStatModel();
+  }
+
   friend std::ostream& operator<<(std::ostream& out, Character& rhs) {
-    out << "Base ATK:\t\t" << rhs.stats_[BASE_ATTACK] << "\n";
+    out << "Base FLAT_ATK:\t\t" << rhs.stats_[BASE_ATK] << "\n";
     out << "ATK\t\t\t" << rhs.final_stats_.total_attack << "\n";
     out << "MAX HP:\t\t\t" << rhs.final_stats_.total_hp << "\n";
     out << "DEF:\t\t\t" << rhs.final_stats_.total_defense << "\n";

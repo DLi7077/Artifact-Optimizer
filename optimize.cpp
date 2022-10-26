@@ -1,5 +1,6 @@
 #include "./Artifact/artifact.h"
 #include "./Constants/constants.h"
+#include "./Game/character.h"
 #include "./generate.h"
 
 using namespace std;
@@ -56,6 +57,21 @@ int main() {
   cout << "Sands Artifacts:\t" << SandsArtifacts.size() << "\n";
   cout << "Goblet Artifacts:\t" << GobletArtifacts.size() << "\n";
   cout << "Circlet Artifacts:\t" << CircletArtifacts.size() << "\n";
+
+  Character test;
+  test.addArtifact(FlowerArtifacts[7055]);
+  test.addArtifact(FeatherArtifacts[7055]);
+  test.addArtifact(SandsArtifacts[10000]);
+  test.addArtifact(GobletArtifacts[40000]);
+  test.addArtifact(CircletArtifacts[10000]);
+
+  test.removeArtifact(FlowerArtifacts[7055]);
+  test.removeArtifact(FeatherArtifacts[7055]);
+  test.removeArtifact(SandsArtifacts[10000]);
+  test.removeArtifact(GobletArtifacts[40000]);
+  test.removeArtifact(CircletArtifacts[10000]);
+
+  cout << test;
 
   cout
       << "\n===============================\n"
