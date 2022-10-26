@@ -56,6 +56,10 @@ class Artifact {
     return substats_[location];
   }
 
+  const Stat& mainStat() const {
+    return main_stat_;
+  }
+
   friend std::ostream& operator<<(std::ostream& out, const Artifact& rhs) {
     out << "main:\t" << rhs.main_stat_;
     for (int i = 0; i < SUBSTAT_COUNT; i++) {

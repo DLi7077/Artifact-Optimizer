@@ -63,6 +63,14 @@ class Stat {
     value_ = Constants::main_stat_max_roll_mapping_[label_];
   }
 
+  std::string& label() {
+    return label_;
+  }
+
+  double value() {
+    return value_;
+  }
+
   friend std::ostream& operator<<(std::ostream& out, const Stat& rhs) {
     std::cout << rhs.label_ << " " << rhs.value_ << "\n";
     return out;
