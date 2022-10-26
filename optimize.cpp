@@ -61,14 +61,19 @@ int main() {
 
   Character test(CRYO);
   test.addArtifact(FlowerArtifacts[7055]);
-  test.addArtifact(FeatherArtifacts[7055]);
+  test.addArtifact(FeatherArtifacts[0]);
   test.addArtifact(SandsArtifacts[10000]);
   test.addArtifact(GobletArtifacts[40000]);
   test.addArtifact(CircletArtifacts[10000]);
 
   cout << test;
-  double dmg = Calculator::damageOutput(test) ;
-  cout << dmg;
+  // double dmg = Calculator::damageOutput(test) ;
+
+  Enemy e_test;
+  e_test.setLevel(100);
+  e_test.setResistance(CRYO, -.30);
+  // cout << Calculator::damageReductionByDefense(test, e_test);
+  cout << Calculator::damageOutput(test, e_test);
 
   cout
       << "\n===============================\n"

@@ -3,9 +3,11 @@
 #include "../Constants/constants.h"
 #include "../Constants/utils.h"
 
+#define CHARACTER_LEVEL "level"
 #define SKILL "Elemental Skill"
 #define BURST "Elemental Burst"
 
+#define DEFAULT_CHARACTER_LEVEL 90
 #define DEFAULT_BASE_ATK 800
 #define DEFAULT_BASE_HP 10000
 #define DEFAULT_BASE_DEF 200
@@ -18,10 +20,11 @@ using TalentDMGPercent = std::unordered_map<std::string, double>;
 
 class Character {
  private:
+  int character_level_ = DEFAULT_CHARACTER_LEVEL;
   std::unordered_map<std::string, double> stats_;
   std::unordered_map<std::string, double> damage_bonus_;
   std::unordered_map<std::string, double> final_stats_;
-  std::string character_element_;
+  std::string damage_element_;
   TalentScalingStat scaling_stat_;
   TalentDMGPercent damage_scaling_;
 
@@ -130,8 +133,8 @@ class Character {
     InitTalentDetails();
     updateStatModel();
   }
-  Character(std::string character_element) {
-    character_element_ = character_element;
+  Character(std::string damage_element) {
+    damage_element_ = damage_element;
     InitCharacterStats();
     InitCharacterDamageBonus();
     InitTalentDetails();
@@ -142,8 +145,12 @@ class Character {
     damage_bonus_.clear();
   }
 
-  std::string& getElement() {
-    return character_element_;
+  int getLevel() {
+    return character_level_;
+  }
+
+  std::string& getDamageElement() {
+    return damage_element_;
   }
   // retrieve info from complete built
   double getStat(std::string label) {
@@ -237,5 +244,4 @@ class Character {
 
     return out;
   }
-
 };
