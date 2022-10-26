@@ -1,5 +1,6 @@
 #include "./Artifact/artifact.h"
 #include "./Constants/constants.h"
+#include "./Game/DamageCalculator.cpp"
 #include "./Game/character.h"
 #include "./generate.h"
 
@@ -56,22 +57,23 @@ int main() {
   cout << "Feather Artifacts:\t" << FeatherArtifacts.size() << "\n";
   cout << "Sands Artifacts:\t" << SandsArtifacts.size() << "\n";
   cout << "Goblet Artifacts:\t" << GobletArtifacts.size() << "\n";
-  cout << "Circlet Artifacts:\t" << CircletArtifacts.size() << "\n";
+  cout << "Circlet Artifacts:\t" << CircletArtifacts.size() << "\n\n";
 
-  Character test;
+  Character test(CRYO);
   test.addArtifact(FlowerArtifacts[7055]);
-  test.addArtifact(FeatherArtifacts[7055]);
+  test.addArtifact(FeatherArtifacts[0]);
   test.addArtifact(SandsArtifacts[10000]);
   test.addArtifact(GobletArtifacts[40000]);
   test.addArtifact(CircletArtifacts[10000]);
 
-  test.removeArtifact(FlowerArtifacts[7055]);
-  test.removeArtifact(FeatherArtifacts[7055]);
-  test.removeArtifact(SandsArtifacts[10000]);
-  test.removeArtifact(GobletArtifacts[40000]);
-  test.removeArtifact(CircletArtifacts[10000]);
-
   cout << test;
+  // double dmg = Calculator::damageOutput(test) ;
+
+  Enemy e_test;
+  e_test.setLevel(100);
+  e_test.setResistance(CRYO, -.30);
+  // cout << Calculator::damageReductionByDefense(test, e_test);
+  cout << Calculator::damageOutput(test, e_test);
 
   cout
       << "\n===============================\n"
