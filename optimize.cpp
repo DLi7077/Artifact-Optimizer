@@ -1,6 +1,5 @@
 #include "./Artifact/artifact.h"
 #include "./Constants/constants.h"
-#include "./Constants/utils.h"
 #include "./generate.h"
 
 using namespace std;
@@ -46,16 +45,6 @@ int main() {
   int substats = 4;
   int roll_count = 5;
 
-  std::unordered_map<std::string, double>& maxRolls = Constants::substat_max_roll_mapping_;
-
-  const vector<string> ArtifactPieces = {
-      FLOWER,
-      FEATHER,
-      SANDS,
-      GOBLET,
-      CIRCLET,
-  };
-
   vector<Artifact> FlowerArtifacts = generateArtifactsForPiece(FLOWER);
   vector<Artifact> FeatherArtifacts = generateArtifactsForPiece(FEATHER);
   vector<Artifact> SandsArtifacts = generateArtifactsForPiece(SANDS);
@@ -71,6 +60,6 @@ int main() {
   cout
       << "\n===============================\n"
       << "Program terminated successfully"
-      << "\n===============================\n";
+      << "\n===============================";
   return 0;
 }
