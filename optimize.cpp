@@ -65,7 +65,11 @@ int main() {
   test.addArtifact(GobletArtifacts[40000]);
   test.addArtifact(CircletArtifacts[10000]);
 
-  cout << GobletArtifacts[40000];
+  test.removeArtifact(FlowerArtifacts[7055]);
+  test.removeArtifact(FeatherArtifacts[7055]);
+  test.removeArtifact(SandsArtifacts[10000]);
+  test.removeArtifact(GobletArtifacts[40000]);
+  test.removeArtifact(CircletArtifacts[10000]);
 
   cout << test;
 

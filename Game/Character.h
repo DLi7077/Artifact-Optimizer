@@ -153,6 +153,23 @@ class Character {
     updateStatModel();
   }
 
+  void removeArtifact(Artifact& artifact) {
+    Stat mainStat = artifact.mainStat();
+    std::string mainLabel = mainStat.label();
+    std::unordered_map<std::string, double>& stats = isDmgBonus(mainLabel) ? damage_bonus_ : stats_;
+    mainLabel = labelCastToElement(mainStat.label());
+
+    stats[mainLabel] -= mainStat.value();
+
+    for (size_t i = 0; i < artifact.size(); i++) {
+      std::string statLabel = artifact[i].label();
+
+      stats[statLabel] -= artifact[i].value();
+    }
+
+    updateStatModel();
+  }
+
   friend std::ostream& operator<<(std::ostream& out, Character& rhs) {
     out << "Base FLAT_ATK:\t\t" << rhs.stats_[BASE_ATK] << "\n";
     out << "ATK\t\t\t" << rhs.final_stats_.total_attack << "\n";
