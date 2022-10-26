@@ -37,9 +37,14 @@ $(PROGRAM_1): $(ALL_OBJ1)
 
 # Compile and run optimize
 run_optimize :
-		make $(PROGRAM_0)
-		./$(PROGRAM_0)
-		make clean
+	make $(PROGRAM_0)
+	./$(PROGRAM_0)
+	make clean
+
+run_dmgcalc :
+	make $(PROGRAM_1)
+	./$(PROGRAM_1)
+	make clean
 all:
 		make $(PROGRAM_0)
 
