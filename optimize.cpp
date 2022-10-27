@@ -43,6 +43,65 @@ vector<Artifact> generateArtifactsForPiece(string pieceName) {
   return result;
 }
 
+struct ArtifactSet {
+  Artifact flower;
+  Artifact feather;
+  Artifact sands;
+  Artifact goblet;
+  Artifact circlet;
+};
+
+const ArtifactSet bestArtifactCombination(Character& character,
+                                          Enemy& enemy,
+                                          vector<Artifact>& FlowerArtifacts,
+                                          vector<Artifact>& FeatherArtifacts,
+                                          vector<Artifact>& SandsArtifacts,
+                                          vector<Artifact>& GobletArtifacts,
+                                          vector<Artifact>& CircletArtifacts) {
+  ArtifactSet best;
+  double highestDamage = 0;
+  for (Artifact& flower : FlowerArtifacts) {
+    character.addArtifact(flower);
+
+    for (Artifact& feather : FeatherArtifacts) {
+      character.addArtifact(feather);
+
+      // for (Artifact& sands : SandsArtifacts) {
+      //   character.addArtifact(sands);
+
+      //   for (Artifact& goblet : GobletArtifacts) {
+      //     character.addArtifact(goblet);
+
+      //     for (Artifact& circlet : CircletArtifacts) {
+      //       character.addArtifact(circlet);
+      double damageOutput = Calculator::damageOutput(character, enemy);
+
+      if (highestDamage < damageOutput) {
+        highestDamage = damageOutput;
+        best.flower = flower;
+        best.feather = feather;
+        // best.sands = sands;
+        // best.goblet = goblet;
+        // best.circlet = circlet;
+      }
+      //       character.removeArtifact(circlet);
+      //     }
+
+      //     character.removeArtifact(goblet);
+      //   }
+
+      //   character.removeArtifact(sands);
+      // }
+
+      character.removeArtifact(feather);
+    }
+
+    character.removeArtifact(flower);
+  }
+
+  return best;
+}
+
 int main() {
   int substats = 4;
   int roll_count = 5;
@@ -59,21 +118,13 @@ int main() {
   cout << "Goblet Artifacts:\t" << GobletArtifacts.size() << "\n";
   cout << "Circlet Artifacts:\t" << CircletArtifacts.size() << "\n\n";
 
-  Character test(CRYO);
-  test.addArtifact(FlowerArtifacts[7055]);
-  test.addArtifact(FeatherArtifacts[0]);
-  test.addArtifact(SandsArtifacts[10000]);
-  test.addArtifact(GobletArtifacts[40000]);
-  test.addArtifact(CircletArtifacts[10000]);
+  Character character(CRYO);
+  Enemy enemy;
 
-  cout << test;
-  // double dmg = Calculator::damageOutput(test) ;
-
-  Enemy e_test;
-  e_test.setLevel(100);
-  e_test.setResistance(CRYO, -.30);
-  // cout << Calculator::damageReductionByDefense(test, e_test);
-  cout << Calculator::damageOutput(test, e_test);
+  ArtifactSet best = bestArtifactCombination(character, enemy,
+                                             FlowerArtifacts, FeatherArtifacts, SandsArtifacts, GobletArtifacts, CircletArtifacts);
+  cout << best.flower << '\n';
+  cout << best.feather << '\n';
 
   cout
       << "\n===============================\n"

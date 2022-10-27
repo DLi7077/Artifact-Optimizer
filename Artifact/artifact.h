@@ -4,6 +4,7 @@
 
 class Artifact {
  public:
+  Artifact() {}
   // two-param constructor
   Artifact(const std::array<std::string, SUBSTAT_COUNT>& substats, std::string mainStat) {
     main_stat_ = Stat(mainStat);
@@ -21,6 +22,17 @@ class Artifact {
     for (size_t i = 0; i < SUBSTAT_COUNT; i++) {
       substats_[i] = Stat(rhs.substats_[i]);  // only possible due to copy assignment
     }
+  }
+
+  // copy assignment
+  Artifact& operator=(const Artifact& rhs) {
+    main_stat_ = Stat(rhs.main_stat_);
+
+    for (size_t i = 0; i < SUBSTAT_COUNT; i++) {
+      substats_[i] = Stat(rhs.substats_[i]);  // only possible due to copy assignment
+    }
+
+    return *this;
   }
 
   // move constructor
