@@ -51,34 +51,52 @@ const ArtifactSet bestArtifactCombination(
     vector<Artifact>& CircletArtifacts) {
   ArtifactSet best;
   double highestDamage = 0;
+  const double confidenceLevel = 1.05;
+
   for (Artifact& flower : FlowerArtifacts) {
     character.addArtifact(flower);
 
     for (Artifact& feather : FeatherArtifacts) {
       character.addArtifact(feather);
+      double FFOutput = Calculator::damageOutput(character, enemy);
+      if (FFOutput * confidenceLevel < highestDamage) {
+        cout << "skipped feather\n";
+        break;
+      }
 
       for (Artifact& sands : SandsArtifacts) {
         character.addArtifact(sands);
 
-        // for (Artifact& goblet : GobletArtifacts) {
-        //   character.addArtifact(goblet);
-
-        //   for (Artifact& circlet : CircletArtifacts) {
-        //     character.addArtifact(circlet);
-        double damageOutput = Calculator::damageOutput(character, enemy);
-
-        if (highestDamage < damageOutput) {
-          highestDamage = damageOutput;
-          best.flower = flower;
-          best.feather = feather;
-          best.sands = sands;
-          // best.goblet = goblet;
-          // best.circlet = circlet;
+        double FFSOutput = Calculator::damageOutput(character, enemy);
+        if (FFSOutput * confidenceLevel < highestDamage) {
+          cout << "skipped skipped sands\n";
+          break;
         }
-        //     character.removeArtifact(circlet);
-        //   }
-        //   character.removeArtifact(goblet);
-        // }
+        
+        for (Artifact& goblet : GobletArtifacts) {
+          character.addArtifact(goblet);
+          double FFSGOutput = Calculator::damageOutput(character, enemy);
+          if (FFSGOutput * confidenceLevel < highestDamage) {
+            cout << "skipped skipped goblet\n";
+            break;
+          }
+
+          //   for (Artifact& circlet : CircletArtifacts) {
+          //     character.addArtifact(circlet);
+          double damageOutput = Calculator::damageOutput(character, enemy);
+
+          if (highestDamage < damageOutput) {
+            highestDamage = damageOutput;
+            best.flower = flower;
+            best.feather = feather;
+            best.sands = sands;
+            best.goblet = goblet;
+            // best.circlet = circlet;
+          }
+          //     character.removeArtifact(circlet);
+          //   }
+          character.removeArtifact(goblet);
+        }
         character.removeArtifact(sands);
       }
       character.removeArtifact(feather);
@@ -86,6 +104,7 @@ const ArtifactSet bestArtifactCombination(
     character.removeArtifact(flower);
   }
 
+  cout << "Highest Damage:\t" << highestDamage << "\n";
   return best;
 }
 
@@ -146,6 +165,7 @@ int main() {
   cout << best.flower << '\n';
   cout << best.feather << '\n';
   cout << best.sands << '\n';
+  cout << best.goblet << '\n';
 
   auto stop = chrono::high_resolution_clock::now();
 
