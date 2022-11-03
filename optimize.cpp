@@ -1,177 +1,74 @@
-#include <chrono>
+#include <cmath>
 
 #include "./Artifact/artifact.h"
 #include "./Constants/constants.h"
 #include "./Game/DamageCalculator.cpp"
 #include "./Game/character.h"
-#include "./Utils/utils.cpp"
-#include "./generate.h"
-
-using namespace std;
-
-vector<Artifact> generateArtifacts(
-    vector<string>& mainStatPool,
-    vector<string>& substatPool = Constants::possible_substats_) {
-  vector<Artifact> result;
-
-  // consider every possible main stat
-  for (string& mainStat : mainStatPool) {
-    // generate possible starting stats
-    vector<string> possibleSubstats = Utils::omit(substatPool, mainStat);
-    vector<Artifact> startingStats = Generate::generateStartingArtifacts(mainStat, possibleSubstats);
-
-    // generate rolls for each base artifact
-    for (Artifact& baseArtifact : startingStats) {
-      vector<Artifact> artifactRollResults = Generate::generateArtifactOutcomes(baseArtifact);
-
-      // add every possible roll outcome for every artifact to result
-      for (Artifact& rollResult : artifactRollResults) {
-        result.push_back(move(rollResult));
-      }
-    }
-  }
-
-  return result;
-}
-
-struct ArtifactSet {
-  Artifact flower;
-  Artifact feather;
-  Artifact sands;
-  Artifact goblet;
-  Artifact circlet;
-};
-
-const ArtifactSet bestArtifactCombination(
-    Character& character, Enemy& enemy,
-    vector<Artifact>& FlowerArtifacts,
-    vector<Artifact>& FeatherArtifacts,
-    vector<Artifact>& SandsArtifacts,
-    vector<Artifact>& GobletArtifacts,
-    vector<Artifact>& CircletArtifacts) {
-  ArtifactSet best;
-  double highestDamage = 0;
-  const double confidenceLevel = 1.05;
-
-  for (Artifact& flower : FlowerArtifacts) {
-    character.addArtifact(flower);
-
-    for (Artifact& feather : FeatherArtifacts) {
-      character.addArtifact(feather);
-      double FFOutput = Calculator::damageOutput(character, enemy);
-      if (FFOutput * confidenceLevel < highestDamage) {
-        cout << "skipped feather\n";
-        break;
-      }
-
-      for (Artifact& sands : SandsArtifacts) {
-        character.addArtifact(sands);
-
-        double FFSOutput = Calculator::damageOutput(character, enemy);
-        if (FFSOutput * confidenceLevel < highestDamage) {
-          cout << "skipped skipped sands\n";
-          break;
-        }
-        
-        for (Artifact& goblet : GobletArtifacts) {
-          character.addArtifact(goblet);
-          double FFSGOutput = Calculator::damageOutput(character, enemy);
-          if (FFSGOutput * confidenceLevel < highestDamage) {
-            cout << "skipped skipped goblet\n";
-            break;
-          }
-
-          //   for (Artifact& circlet : CircletArtifacts) {
-          //     character.addArtifact(circlet);
-          double damageOutput = Calculator::damageOutput(character, enemy);
-
-          if (highestDamage < damageOutput) {
-            highestDamage = damageOutput;
-            best.flower = flower;
-            best.feather = feather;
-            best.sands = sands;
-            best.goblet = goblet;
-            // best.circlet = circlet;
-          }
-          //     character.removeArtifact(circlet);
-          //   }
-          character.removeArtifact(goblet);
-        }
-        character.removeArtifact(sands);
-      }
-      character.removeArtifact(feather);
-    }
-    character.removeArtifact(flower);
-  }
-
-  cout << "Highest Damage:\t" << highestDamage << "\n";
-  return best;
-}
+#include "./Utils/initializer.cpp"
 
 int main() {
   auto start = chrono::high_resolution_clock::now();
-  int substats = 4;
-  int roll_count = 5;
-  vector<string> subStatPreference = {
-      FLAT_ATK,
-      ATK_PERCENT,
-      ENERGY_RECHARGE,
-      ELEMENTAL_MASTERY,
-      CRIT_DAMAGE,
+
+  std::cout << "Flower Artifacts:\t" << Initial::FlowerArtifacts.size() << "\n";
+  std::cout << "Feather Artifacts:\t" << Initial::FeatherArtifacts.size() << "\n";
+  std::cout << "Sands Artifacts:\t" << Initial::SandsArtifacts.size() << "\n";
+  std::cout << "Goblet Artifacts:\t" << Initial::GobletArtifacts.size() << "\n";
+  std::cout << "Circlet Artifacts:\t" << Initial::CircletArtifacts.size() << "\n\n";
+
+  std::vector<std::vector<Artifact>> artifactSets = {
+      std::move(Initial::FlowerArtifacts),
+      std::move(Initial::FeatherArtifacts),
+      std::move(Initial::SandsArtifacts),
+      std::move(Initial::GobletArtifacts),
+      std::move(Initial::CircletArtifacts),
   };
 
-  vector<string> mainStatPreference = {
-      FLAT_HP,   // Flower
-      FLAT_ATK,  // Feather
-      ATK_PERCENT,
-      ELEMENTAL_MASTERY,
-      CRYO_DAMAGE_BONUS,
-      CRIT_DAMAGE,
+  struct DamageComparator {
+   public:
+    Enemy enemy;
+    bool operator()(Character a, Character b) {
+      double damageA = Calculator::damageOutput(a, enemy);
+      double damageB = Calculator::damageOutput(b, enemy);
+      return damageA > damageB;
+    }
   };
 
-  vector<string> mainStatGobletPref = {
-      CRYO_DAMAGE_BONUS,
-  };
-  vector<string> mainStatCircletPref = {
-      CRIT_DAMAGE,
-  };
+  const size_t limit = 20;
+  Character base(CRYO);
+  std::vector<Character> population = {base};
 
-  vector<string>
-      FlowerMainPref = Utils::intersection(Constants::artifact_main_stats_[FLOWER], mainStatPreference);
-  vector<string> FeatherMainPref = Utils::intersection(Constants::artifact_main_stats_[FEATHER], mainStatPreference);
-  vector<string> SandsMainPref = Utils::intersection(Constants::artifact_main_stats_[SANDS], mainStatPreference);
-  vector<string> GobletMainPref = Utils::intersection(Constants::artifact_main_stats_[GOBLET], mainStatGobletPref);
-  vector<string> CircletMainPref = Utils::intersection(Constants::artifact_main_stats_[CIRCLET], mainStatCircletPref);
+  std::priority_queue<Character, std::vector<Character>, DamageComparator> minHeap;
+  for (std::vector<Artifact>& artifactPool : artifactSets) {
+    for (Character character : population) {
+      for (Artifact& piece : artifactPool) {
+        Character curr = character;
+        curr.addArtifact(piece);
+        minHeap.push(curr);
 
-  for (string x : mainStatGobletPref) cout << x << "\n";
+        if (minHeap.size() > limit) {
+          minHeap.pop();
+        }
+      }
+    }
+    population.clear();
+    while (minHeap.size()) {
+      population.push_back(minHeap.top());
+      minHeap.pop();
+    }
+  }
 
-  vector<Artifact> FlowerArtifacts = generateArtifacts(FlowerMainPref, subStatPreference);
-  vector<Artifact> FeatherArtifacts = generateArtifacts(FeatherMainPref, subStatPreference);
-  vector<Artifact> SandsArtifacts = generateArtifacts(SandsMainPref, subStatPreference);
-  vector<Artifact> GobletArtifacts = generateArtifacts(GobletMainPref, subStatPreference);
-  vector<Artifact> CircletArtifacts = generateArtifacts(CircletMainPref, subStatPreference);
-
-  cout << "Flower Artifacts:\t" << FlowerArtifacts.size() << "\n";
-  cout << "Feather Artifacts:\t" << FeatherArtifacts.size() << "\n";
-  cout << "Sands Artifacts:\t" << SandsArtifacts.size() << "\n";
-  cout << "Goblet Artifacts:\t" << GobletArtifacts.size() << "\n";
-  cout << "Circlet Artifacts:\t" << CircletArtifacts.size() << "\n\n";
-
-  Character character(CRYO);
   Enemy enemy;
 
-  ArtifactSet best = bestArtifactCombination(character, enemy,
-                                             FlowerArtifacts, FeatherArtifacts, SandsArtifacts, GobletArtifacts, CircletArtifacts);
-  cout << best.flower << '\n';
-  cout << best.feather << '\n';
-  cout << best.sands << '\n';
-  cout << best.goblet << '\n';
+  Character x = population[19];
+  std::vector<Artifact> as = x.getArtifacts();
+  std::cout << as.size();
+
+  for (Artifact& y : as) std::cout << y;
 
   auto stop = chrono::high_resolution_clock::now();
-
   auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
 
-  cout
+  std::cout
       << "\n===============================\n"
       << "======" << duration.count() << "ms======\n"
       << "Program terminated successfully"
