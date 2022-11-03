@@ -24,6 +24,7 @@ class Character {
   std::unordered_map<std::string, double> stats_;
   std::unordered_map<std::string, double> damage_bonus_;
   std::unordered_map<std::string, double> final_stats_;
+  std::vector<Artifact> artifact_set_;
   std::string damage_element_;
   TalentScalingStat scaling_stat_;
   TalentDMGPercent damage_scaling_;
@@ -127,12 +128,15 @@ class Character {
   }
 
  public:
+  // default
   Character() {
     InitCharacterStats();
     InitCharacterDamageBonus();
     InitTalentDetails();
     updateStatModel();
   }
+
+  // one-param
   Character(std::string damage_element) {
     damage_element_ = damage_element;
     InitCharacterStats();
@@ -140,10 +144,65 @@ class Character {
     InitTalentDetails();
     updateStatModel();
   }
-  ~Character() {
-    stats_.clear();
-    damage_bonus_.clear();
+
+  // copy-construct
+  Character(const Character& rhs) {
+    character_level_ = rhs.character_level_;
+    stats_ = rhs.stats_;
+    damage_bonus_ = rhs.damage_bonus_;
+    final_stats_ = rhs.stats_;
+    damage_element_ = rhs.damage_element_;
+    scaling_stat_ = rhs.scaling_stat_;
+    damage_scaling_ = rhs.damage_scaling_;
+    character_level_ = rhs.character_level_;
+    artifact_set_ = rhs.artifact_set_;
+
+    updateStatModel();
   }
+
+  // copy assign
+  Character operator=(const Character& rhs) {
+    Character copy = rhs;
+    std::swap(*this, copy);
+    updateStatModel();
+
+    return *this;
+  }
+
+  // move construct
+  Character(Character&& rhs) {
+    character_level_ = rhs.character_level_;
+    stats_ = rhs.stats_;
+    damage_bonus_ = rhs.damage_bonus_;
+    final_stats_ = rhs.stats_;
+    damage_element_ = rhs.damage_element_;
+    scaling_stat_ = rhs.scaling_stat_;
+    damage_scaling_ = rhs.damage_scaling_;
+    character_level_ = rhs.character_level_;
+    artifact_set_ = rhs.artifact_set_;
+
+    updateStatModel();
+  }
+
+  // move assign
+  Character& operator=(Character&& rhs) {
+    std::swap(character_level_, rhs.character_level_);
+    std::swap(stats_, rhs.stats_);
+    std::swap(damage_bonus_, rhs.damage_bonus_);
+    std::swap(final_stats_, rhs.stats_);
+    std::swap(damage_element_, rhs.damage_element_);
+    std::swap(scaling_stat_, rhs.scaling_stat_);
+    std::swap(damage_scaling_, rhs.damage_scaling_);
+    std::swap(character_level_, rhs.character_level_);
+    std::swap(artifact_set_, rhs.artifact_set_);
+
+    updateStatModel();
+
+    return *this;
+  }
+
+  // destructor
+  ~Character() = default;
 
   int getLevel() {
     return character_level_;
@@ -180,6 +239,8 @@ class Character {
   }
 
   void addArtifact(Artifact& artifact) {
+    artifact_set_.push_back(artifact);
+
     Stat mainStat = artifact.mainStat();
     std::string mainLabel = mainStat.label();
     std::unordered_map<std::string, double>& stats = isDmgBonus(mainLabel) ? damage_bonus_ : stats_;
@@ -212,6 +273,10 @@ class Character {
     updateStatModel();
   }
 
+  std::vector<Artifact> getArtifacts() {
+    return artifact_set_;
+  }
+
   void setTalentDetails(std::string talent, std::string scaling_stat, double scaling_percent) {
     scaling_stat_[talent] = scaling_stat;
     damage_scaling_[talent] = scaling_percent;
@@ -226,6 +291,7 @@ class Character {
   }
 
   friend std::ostream& operator<<(std::ostream& out, Character& rhs) {
+    out << "Character Level:\t" << rhs.character_level_ << "\n";
     out << "Base FLAT_ATK:\t\t" << rhs.stats_[BASE_ATK] << "\n";
     out << "ATK\t\t\t" << rhs.final_stats_["total_attack"] << "\n";
     out << "MAX HP:\t\t\t" << rhs.final_stats_["total_hp"] << "\n";
