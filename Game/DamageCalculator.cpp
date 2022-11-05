@@ -24,7 +24,7 @@ double bonusMultipliers(Character& character) {
   double dmg_bonus = character.getDMGBonus(character.getDamageElement());
   double crit_dmg = character.getStat("crit_damage");
 
-  return 1 + dmg_bonus + crit_dmg;
+  return (1 + dmg_bonus) * (1 + crit_dmg);
 }
 
 // TODO: add melt bonus

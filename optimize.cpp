@@ -33,11 +33,11 @@ int main() {
     }
   };
 
-  const size_t limit = 20;
+  const size_t limit = 50;
   Character base(CRYO);
   std::vector<Character> population = {base};
-
   std::priority_queue<Character, std::vector<Character>, DamageComparator> minHeap;
+
   for (std::vector<Artifact>& artifactPool : artifactSets) {
     for (Character character : population) {
       for (Artifact& piece : artifactPool) {
@@ -50,7 +50,9 @@ int main() {
         }
       }
     }
+
     population.clear();
+
     while (minHeap.size()) {
       population.push_back(minHeap.top());
       minHeap.pop();
@@ -58,10 +60,12 @@ int main() {
   }
 
   Enemy enemy;
+  Character x = population[limit - 1];
+  cout << x;
 
-  Character x = population[19];
+  cout << "best damage " << Calculator::damageOutput(x, enemy) << "\n";
+
   std::vector<Artifact> as = x.getArtifacts();
-  std::cout << as.size();
 
   for (Artifact& y : as) std::cout << y;
 
@@ -69,9 +73,10 @@ int main() {
   auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
 
   std::cout
-      << "\n===============================\n"
-      << "======" << duration.count() << "ms======\n"
-      << "Program terminated successfully"
-      << "\n===============================";
+      << "\n====== limit : " << limit << "\n"
+      << "====== " << duration.count() << " ms\n"
+      << "Program terminated successfully\n"
+      << "=======================\n";
+
   return 0;
 }
