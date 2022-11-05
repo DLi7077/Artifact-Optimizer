@@ -18,7 +18,6 @@ std::vector<Item> intersection(std::vector<Item>& a, std::vector<Item>& b) {
       a_ptr++;
       b_ptr++;
     }
-    // cout << a_ptr << " " << b_ptr << "\n";
   }
 
   return result;

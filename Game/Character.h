@@ -230,7 +230,7 @@ class Character {
     updateStatModel();
   }
   void setDamageBonus(std::string label, double value) {
-    stats_[label] = value;
+    damage_bonus_[label] = value;
     updateStatModel();
   }
 
@@ -250,7 +250,7 @@ class Character {
 
     for (size_t i = 0; i < artifact.size(); i++) {
       std::string statLabel = artifact[i].label();
-      stats[statLabel] += artifact[i].value();
+      stats_[statLabel] += artifact[i].value();
     }
 
     updateStatModel();
@@ -307,6 +307,7 @@ class Character {
     out << "Hydro DMG Bonus:\t" << rhs.final_stats_["damage_bonus_hydro"] * 100 << "%\n";
     out << "Pyro DMG Bonus: \t" << rhs.final_stats_["damage_bonus_pyro"] * 100 << "%\n";
     out << "Physical DMG Bonus:\t" << rhs.final_stats_["damage_bonus_physical"] * 100 << "%\n";
+    out << std::string(30, '-') << "\n";
 
     return out;
   }
