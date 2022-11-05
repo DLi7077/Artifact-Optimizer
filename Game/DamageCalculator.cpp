@@ -27,10 +27,24 @@ double bonusMultipliers(Character& character) {
   return (1 + dmg_bonus) * (1 + crit_dmg);
 }
 
-// TODO: add melt bonus
-double meltBonus(Character& character) {
+// TODO: add crimson witch buffs
+double meltBonus(Character& character, Enemy& enemy) {
   double EM = character.getStat("elemental_mastery");
-  return 2.78 * (EM / 1400);
+  std::string dmgElement = character.getDamageElement();
+  std::string enemyElement = enemy.getAffectedElement();
+  double reactionBonus = 1 + (2.78 * (EM / (EM + 1400)));
+
+  double multiplier = 1;
+  if (dmgElement == PYRO && enemyElement == CRYO)
+    multiplier = 2 * reactionBonus;
+  else if (dmgElement == CRYO && enemyElement == PYRO)
+    multiplier = 1.5 * reactionBonus;
+  else if (dmgElement == HYDRO && enemyElement == PYRO)
+    multiplier = 2 * reactionBonus;
+  else if (dmgElement == PYRO && enemyElement == HYDRO)
+    multiplier = 1.5 * reactionBonus;
+
+  return multiplier;
 }
 
 double damageReductionByDefense(Character& character, Enemy& enemy) {
@@ -64,8 +78,13 @@ double damageOutput(Character& character, Enemy& enemy) {
   double multipliers = bonusMultipliers(character);
   double DMGReducedPercent = 1 - damageReductionByDefense(character, enemy);
   double resistanceMultiplier = enemyElementResistance(character, enemy);
+  double meltVapMultiplier = meltBonus(character, enemy);
 
-  return baseDMG * multipliers * DMGReducedPercent * resistanceMultiplier;
+  return baseDMG *
+         multipliers *
+         DMGReducedPercent *
+         resistanceMultiplier *
+         meltVapMultiplier;
 }
 
 }  // namespace Calculator

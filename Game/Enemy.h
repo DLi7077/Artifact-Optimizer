@@ -3,11 +3,13 @@
 #include "../Constants/pch.h"
 
 #define DEFAULT_ENEMY_LEVEL 93
+#define DEFAULT_AFFECTED_ELEMENT PYRO
 
 class Enemy {
  private:
   int enemy_level_;
   std::unordered_map<std::string, double> resistance_percent_;
+  std::string affected_element_ = DEFAULT_AFFECTED_ELEMENT;
 
  public:
   Enemy() {
@@ -37,6 +39,10 @@ class Enemy {
     return resistance_percent_[element];
   }
 
+  std::string getAffectedElement() {
+    return affected_element_;
+  }
+
   void setLevel(int level) {
     enemy_level_ = level;
   }
@@ -46,5 +52,8 @@ class Enemy {
       abort();
     }
     resistance_percent_[element] = value;
+  }
+  void setAffectedElement(std::string element) {
+    affected_element_ = element;
   }
 };
