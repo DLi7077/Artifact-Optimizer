@@ -86,10 +86,6 @@ class Enemy {
     return affected_element_;
   }
 
-  Enemy& getReference() {
-    return *this;
-  }
-
   void setLevel(int level) {
     enemy_level_ = level;
   }
