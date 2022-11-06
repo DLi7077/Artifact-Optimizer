@@ -21,7 +21,7 @@ vector<string> mainStatPreference = {
 };
 
 vector<string> mainStatGobletPref = {
-    CRYO_DAMAGE_BONUS,
+    HYDRO_DAMAGE_BONUS,
 };
 vector<string> mainStatCircletPref = {
     CRIT_DAMAGE,

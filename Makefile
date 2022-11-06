@@ -46,10 +46,10 @@ run_dmgcalc :
 	./$(PROGRAM_1)
 	make clean
 all:
-		make $(PROGRAM_0)
+	make $(PROGRAM_0)
 
 # Clean obj files
 clean:
-	(rm -f *.o; rm -f optimize)
+	(rm -f *.o; rm -f $(PROGRAM_0))
 
 (:
