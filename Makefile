@@ -24,8 +24,8 @@ INCLUDES=  -I.
 LIBS_ALL = -L/usr/lib -L/usr/local/lib $(MATH_LIBS)
 
 # ZEROTH PROGRAM
-ALL_OBJ0=optimize.o
-PROGRAM_0=optimize
+ALL_OBJ0=client.o
+PROGRAM_0=client
 $(PROGRAM_0): $(ALL_OBJ0)
 	g++ $(C++FLAG) -o $(EXEC_DIR)/$@ $(ALL_OBJ0) $(INCLUDES) $(LIBS_ALL)
 
