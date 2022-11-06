@@ -32,7 +32,7 @@ double meltBonus(Character& character, Enemy& enemy) {
   double EM = character.getStat("elemental_mastery");
   std::string dmgElement = character.getDamageElement();
   std::string enemyElement = enemy.getAffectedElement();
-  double reactionBonus = 1 + (2.78 * (EM / (EM + 1400)));
+  double reactionBonus = (1 + (2.78 * (EM / (EM + 1400)))) * 1.15;
 
   double multiplier = 1;
   if (dmgElement == PYRO && enemyElement == CRYO)

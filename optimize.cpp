@@ -33,8 +33,7 @@ void optimize(Character& character, Enemy& enemy) {
   };
 
   const size_t limit = 20;
-  Character base(CRYO);
-  std::vector<Character> population = {base};
+  std::vector<Character> population = {character};
   std::priority_queue<
       Character,
       std::vector<Character>,
