@@ -1,14 +1,13 @@
-#include <cmath>
-
 #include "./Artifact/artifact.h"
 #include "./Constants/constants.h"
 #include "./Game/DamageCalculator.cpp"
 #include "./Game/character.h"
 #include "./Utils/initializer.cpp"
 
-int main() {
-  auto start = chrono::high_resolution_clock::now();
+namespace Optimize {
 
+// https://stackoverflow.com/questions/16111337/declaring-a-priority-queue-in-c-with-a-custom-comparator
+void optimize(Character& character, Enemy& enemy) {
   std::cout << "Flower Artifacts:\t" << Initial::FlowerArtifacts.size() << "\n";
   std::cout << "Feather Artifacts:\t" << Initial::FeatherArtifacts.size() << "\n";
   std::cout << "Sands Artifacts:\t" << Initial::SandsArtifacts.size() << "\n";
@@ -23,20 +22,24 @@ int main() {
       std::move(Initial::CircletArtifacts),
   };
 
-  struct DamageComparator {
-   public:
-    Enemy enemy;
-    bool operator()(Character a, Character b) {
-      double damageA = Calculator::damageOutput(a, enemy);
-      double damageB = Calculator::damageOutput(b, enemy);
-      return damageA > damageB;
-    }
+  // permit to refer to variables in external scope
+  // https://stackoverflow.com/questions/26903602/an-enclosing-function-local-variable-cannot-be-referenced-in-a-lambda-body-unles
+  auto DamageComparator = [&](Character a, Character b) {
+    double damageA = Calculator::damageOutput(a, enemy);
+    double damageB = Calculator::damageOutput(b, enemy);
+    return damageA > damageB;
+
+    return true;
   };
 
-  const size_t limit = 50;
+  const size_t limit = 20;
   Character base(CRYO);
   std::vector<Character> population = {base};
-  std::priority_queue<Character, std::vector<Character>, DamageComparator> minHeap;
+  std::priority_queue<
+      Character,
+      std::vector<Character>,
+      decltype(DamageComparator)>
+      minHeap(DamageComparator);
 
   for (std::vector<Artifact>& artifactPool : artifactSets) {
     for (Character character : population) {
@@ -59,24 +62,13 @@ int main() {
     }
   }
 
-  Enemy enemy;
-  Character x = population[limit - 1];
-  cout << x;
+  Character best = population[limit - 1];
+  cout << best;
 
-  cout << "best damage " << Calculator::damageOutput(x, enemy) << "\n";
+  cout << "best damage " << Calculator::damageOutput(best, enemy) << "\n";
 
-  std::vector<Artifact> as = x.getArtifacts();
+  std::vector<Artifact> artifacts = best.getArtifacts();
 
-  for (Artifact& y : as) std::cout << y;
-
-  auto stop = chrono::high_resolution_clock::now();
-  auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
-
-  std::cout
-      << "\n====== limit : " << limit << "\n"
-      << "====== " << duration.count() << " ms\n"
-      << "Program terminated successfully\n"
-      << "=======================\n";
-
-  return 0;
+  for (Artifact& artifact : artifacts) std::cout << artifact;
 }
+}  // namespace Optimize
