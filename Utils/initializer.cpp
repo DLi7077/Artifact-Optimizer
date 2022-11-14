@@ -1,6 +1,6 @@
-#include "./generate.h"
 #include "../Artifact/artifact.h"
 #include "../Constants/pch.h"
+#include "./generate.h"
 
 namespace Initial {
 vector<string> subStatPreference = {
@@ -27,8 +27,21 @@ vector<string> mainStatCircletPref = {
     CRIT_DAMAGE,
 };
 
-vector<string>
-    FlowerMainPref = Utils::intersection(Constants::artifact_main_stats_[FLOWER], mainStatPreference);
+vector<string> FlowerMainStats = {FLAT_HP};
+vector<string> FeatherMainStats = {FLAT_ATK};
+vector<string> SandsMainStats = {ATK_PERCENT, ELEMENTAL_MASTERY};
+vector<string> GobletMainStats = {HYDRO_DAMAGE_BONUS};
+vector<string> CircletMainStats = {CRIT_DAMAGE, ATK_PERCENT, ELEMENTAL_MASTERY};
+
+// unordered_map<string, vector<string>> mainStatPreference = {
+//     {FLOWER, FlowerMainStats},
+//     {FEATHER, FeatherMainStats},
+//     {SANDS, SandsMainStats},
+//     {GOBLET, GobletMainStats},
+//     {CIRCLET, CircletMainStats},
+// };
+
+vector<string> FlowerMainPref = Utils::intersection(Constants::artifact_main_stats_[FLOWER], mainStatPreference);
 vector<string> FeatherMainPref = Utils::intersection(Constants::artifact_main_stats_[FEATHER], mainStatPreference);
 vector<string> SandsMainPref = Utils::intersection(Constants::artifact_main_stats_[SANDS], mainStatPreference);
 vector<string> GobletMainPref = Utils::intersection(Constants::artifact_main_stats_[GOBLET], mainStatGobletPref);
