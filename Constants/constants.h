@@ -15,6 +15,7 @@
 #define HYDRO_DAMAGE_BONUS "Hydro DMG Bonus%"
 #define PYRO_DAMAGE_BONUS "Pyro DMG Bonus%"
 #define PHYSICAL_DAMAGE_BONUS "Physical DMG Bonus"
+#define ALL_DAMAGE_BONUS "DMG Bonus"
 
 #define BASE_ATK "Base Attack"
 #define BASE_HP "Base HP"
@@ -83,6 +84,7 @@
 #define HYDRO "Hydro"
 #define PYRO "Pyro"
 #define PHYSICAL "Physical"
+#define ALL "All"
 
 namespace Constants {
 
@@ -100,18 +102,17 @@ std::vector<std::string> possible_substats_ = {
 };
 
 // retrieve max roll for a single substat
-std::unordered_map<std::string, double>
-    substat_max_roll_mapping_ = {
-        {FLAT_ATK, MAX_ATK_ROLL},
-        {ATK_PERCENT, MAX_ATK_PERCENT_ROLL},
-        {FLAT_HP, MAX_HP_ROLL},
-        {HP_PERCENT, MAX_HP_PERCENT_ROLL},
-        {FLAT_DEF, MAX_DEF_ROLL},
-        {DEF_PERCENT, MAX_DEF_PERCENT_ROLL},
-        {ELEMENTAL_MASTERY, MAX_EM_ROLL},
-        {ENERGY_RECHARGE, MAX_ER_PERCENT_ROLL},
-        {CRIT_RATE, MAX_CRIT_RATE_ROLL},
-        {CRIT_DAMAGE, MAX_CRIT_DAMAGE_ROLL},
+std::unordered_map<std::string, double> substat_max_roll_mapping_ = {
+    {FLAT_ATK, MAX_ATK_ROLL},
+    {ATK_PERCENT, MAX_ATK_PERCENT_ROLL},
+    {FLAT_HP, MAX_HP_ROLL},
+    {HP_PERCENT, MAX_HP_PERCENT_ROLL},
+    {FLAT_DEF, MAX_DEF_ROLL},
+    {DEF_PERCENT, MAX_DEF_PERCENT_ROLL},
+    {ELEMENTAL_MASTERY, MAX_EM_ROLL},
+    {ENERGY_RECHARGE, MAX_ER_PERCENT_ROLL},
+    {CRIT_RATE, MAX_CRIT_RATE_ROLL},
+    {CRIT_DAMAGE, MAX_CRIT_DAMAGE_ROLL},
 };
 
 // retrieve lv. 20 values for a single main stat

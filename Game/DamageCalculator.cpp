@@ -22,9 +22,10 @@ double baseDamage(Character& character, std::string talent) {
 
 double bonusMultipliers(Character& character) {
   double dmg_bonus = character.getDMGBonus(character.getDamageElement());
+  double dmg_bonus_all = character.getDMGBonus(ALL);
   double crit_dmg = character.getStat("crit_damage");
 
-  return (1 + dmg_bonus) * (1 + crit_dmg);
+  return (1 + dmg_bonus + dmg_bonus_all) * (1 + crit_dmg);
 }
 
 // TODO: add crimson witch buffs
@@ -32,17 +33,21 @@ double meltBonus(Character& character, Enemy& enemy) {
   double EM = character.getStat("elemental_mastery");
   std::string dmgElement = character.getDamageElement();
   std::string enemyElement = enemy.getAffectedElement();
-  double reactionBonus = (1 + (2.78 * (EM / (EM + 1400)))) * 1.15;
+  double reactionBonus = (1 + (2.78 * (EM / (EM + 1400))));
+  double meltBonus = character.getStat(MELT_BONUS);
+
+  // std::cout << "Reaction Bonus:\t" << reactionBonus << '\n';
+  // std::cout << "melt Bonus:\t" << meltBonus << '\n';
 
   double multiplier = 1;
   if (dmgElement == PYRO && enemyElement == CRYO)
-    multiplier = 2 * reactionBonus;
+    multiplier = 2 * (reactionBonus + meltBonus);
   else if (dmgElement == CRYO && enemyElement == PYRO)
-    multiplier = 1.5 * reactionBonus;
+    multiplier = 1.5 * (reactionBonus + meltBonus);
   else if (dmgElement == HYDRO && enemyElement == PYRO)
-    multiplier = 2 * reactionBonus;
+    multiplier = 2 * (reactionBonus + meltBonus);
   else if (dmgElement == PYRO && enemyElement == HYDRO)
-    multiplier = 1.5 * reactionBonus;
+    multiplier = 1.5 * (reactionBonus + meltBonus);
 
   return multiplier;
 }

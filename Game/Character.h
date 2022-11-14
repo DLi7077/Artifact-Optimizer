@@ -6,6 +6,7 @@
 #define CHARACTER_LEVEL "level"
 #define SKILL "Elemental Skill"
 #define BURST "Elemental Burst"
+#define MELT_BONUS "Melt Bonus"
 
 #define DEFAULT_CHARACTER_LEVEL 90
 #define DEFAULT_BASE_ATK 800
@@ -43,6 +44,7 @@ class Character {
     stats_[ENERGY_RECHARGE] = 1;
     stats_[CRIT_RATE] = .05;
     stats_[CRIT_DAMAGE] = .5;
+    stats_[MELT_BONUS] = 0;
   }
 
   void InitCharacterDamageBonus() {
@@ -53,6 +55,7 @@ class Character {
     damage_bonus_[HYDRO] = 0;
     damage_bonus_[PYRO] = 0;
     damage_bonus_[PHYSICAL] = 0;
+    damage_bonus_[ALL] = 0;
   }
 
   void InitTalentDetails() {
@@ -69,6 +72,7 @@ class Character {
     final_stats_["elemental_mastery"] = stats_[ELEMENTAL_MASTERY];
     final_stats_["energy_recharge"] = stats_[ENERGY_RECHARGE];
     final_stats_["crit_rate"] = stats_[CRIT_RATE];
+    final_stats_[MELT_BONUS] = stats_[MELT_BONUS];
     final_stats_["crit_damage"] = stats_[CRIT_DAMAGE];
     final_stats_["damage_bonus_anemo"] = damage_bonus_[ANEMO];
     final_stats_["damage_bonus_cryo"] = damage_bonus_[CRYO];
@@ -77,6 +81,7 @@ class Character {
     final_stats_["damage_bonus_hydro"] = damage_bonus_[HYDRO];
     final_stats_["damage_bonus_pyro"] = damage_bonus_[PYRO];
     final_stats_["damage_bonus_physical"] = damage_bonus_[PHYSICAL];
+    final_stats_["damage_bonus_all"] = damage_bonus_[ALL];
   }
 
   bool validFinalStat(std::string statLabel) {
@@ -95,6 +100,7 @@ class Character {
         "damage_bonus_hydro",
         "damage_bonus_pyro",
         "damage_bonus_physical",
+        MELT_BONUS,
     };
     for (const std::string& stat : validStats) {
       if (statLabel == stat) return true;
@@ -307,6 +313,7 @@ class Character {
     out << "Hydro DMG Bonus:\t" << rhs.final_stats_["damage_bonus_hydro"] * 100 << "%\n";
     out << "Pyro DMG Bonus: \t" << rhs.final_stats_["damage_bonus_pyro"] * 100 << "%\n";
     out << "Physical DMG Bonus:\t" << rhs.final_stats_["damage_bonus_physical"] * 100 << "%\n";
+    out << "Other DMG Bonus:\t" << rhs.final_stats_["damage_bonus_all"] * 100 << "%\n";
     out << std::string(30, '-') << "\n";
 
     return out;

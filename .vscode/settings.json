@@ -102,5 +102,6 @@
     "xloctime": "cpp",
     "xtree": "cpp",
     "condition_variable": "cpp"
-  }
+  },
+  "C_Cpp.clang_format_fallbackStyle": "Google"
 }
