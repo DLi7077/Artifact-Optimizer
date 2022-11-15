@@ -1,5 +1,5 @@
 #pragma once
-#include "../Artifact/artifact.h"
+#include "./Artifact/artifact.h"
 #include "../Constants/constants.h"
 #include "../Constants/pch.h"
 

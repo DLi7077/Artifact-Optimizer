@@ -1,4 +1,3 @@
-#include "./Artifact/artifact.h"
 #include "./Constants/constants.h"
 #include "./Game/DamageCalculator.cpp"
 #include "./Game/character.h"
