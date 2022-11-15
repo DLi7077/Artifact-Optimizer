@@ -1,4 +1,4 @@
-#include "../Artifact/artifact.h"
+#include "../Game/Artifact/artifact.h"
 #include "../Constants/pch.h"
 #include "./generate.h"
 
