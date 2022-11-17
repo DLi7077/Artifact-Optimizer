@@ -15,7 +15,6 @@ int main() {
   Tartaglia.setStat(FLAT_ATK, 1491);
   Tartaglia.setStat(ATK_PERCENT, bonusAtkPercent);
   Tartaglia.setStat(ELEMENTAL_MASTERY, 567 + 180);
-  Tartaglia.setStat(ENERGY_RECHARGE, 3.32);
   Tartaglia.setStat(MELT_BONUS, .15);
 
   Tartaglia.setTalentDetails(BURST, "total_attack", 9.86);
@@ -27,8 +26,8 @@ int main() {
   enemy.setLevel(90);
   enemy.setResistance(HYDRO, 0.3 - 0.4 - 1.7);
 
-  Attributes::BonusStatGain fourEmblem("energy_recharge", OTHER_DAMAGE_BONUS, 0, 0.25, 0.75);
-  Tartaglia.addBonusStatGain(fourEmblem);
+  // Attributes::BonusStatGain fourEmblem("energy_recharge", OTHER_DAMAGE_BONUS, 0, 0.25, 0.75);
+  // Tartaglia.addBonusStatGain(fourEmblem);
 
   std::cout << Tartaglia;
 
@@ -38,7 +37,7 @@ int main() {
 
   Character best = Optimize::optimize(Tartaglia, enemy, filterLimit);
 
-  std::cout << Calculator::damageOutput(Tartaglia, enemy) << "\n";
+  std::cout << Calculator::damageOutput(best, enemy, true) << "\n";
 
   auto stop = chrono::high_resolution_clock::now();
   auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);

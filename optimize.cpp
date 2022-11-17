@@ -61,8 +61,6 @@ Character optimize(Character& character, Enemy& enemy, size_t filterLimit) {
   }
 
   Character best = population[limit - 1];
-  cout << best;
-
   std::vector<Artifact> artifacts = best.getArtifacts();
 
   for (Artifact& artifact : artifacts) std::cout << artifact;

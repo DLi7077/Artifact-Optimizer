@@ -87,8 +87,6 @@ class Character {
     final_stats_["damage_bonus_pyro"] = damage_bonus_[PYRO];
     final_stats_["damage_bonus_physical"] = damage_bonus_[PHYSICAL];
     final_stats_["damage_bonus_all"] = damage_bonus_[ALL];
-
-    std::cout << "updating " << damage_bonus_[ALL] << "\n";
   }
 
   bool validFinalStat(std::string statLabel) {
@@ -130,6 +128,8 @@ class Character {
     return false;
   }
 
+  // changes elemental_damage_bonus to the element
+  // if not damage bonus, returns the label
   std::string labelCastToElement(std::string& label) {
     if (label == ANEMO_DAMAGE_BONUS) return ANEMO;
     if (label == CRYO_DAMAGE_BONUS) return CRYO;
@@ -140,8 +140,7 @@ class Character {
     if (label == PHYSICAL_DAMAGE_BONUS) return PHYSICAL;
     if (label == OTHER_DAMAGE_BONUS) return ALL;
 
-    std::cerr << label << "is not a valid damage bonus type\n";
-    abort();
+    return label;
   }
 
  public:
@@ -336,8 +335,6 @@ class Character {
     }
 
     updateStatModel();
-
-    std::cout << *this;
   }
 
   friend std::ostream& operator<<(std::ostream& out, Character& rhs) {

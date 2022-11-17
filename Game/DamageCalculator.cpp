@@ -78,19 +78,24 @@ double enemyElementResistance(Character& character, Enemy& enemy) {
   return 1 - resistance;
 }
 
-double damageOutput(Character& character, Enemy& enemy) {
+double damageOutput(Character& character, Enemy& enemy, bool print = false) {
   // create copy character to apply stat gains
   Character finalized = character;
 
   // apply stat gains
   finalized.applyStatGains();
-  
+
   // compute final damage output
   double baseDMG = baseDamage(finalized, BURST);
   double multipliers = bonusMultipliers(finalized);
   double DMGReducedPercent = 1 - damageReductionByDefense(finalized, enemy);
   double resistanceMultiplier = enemyElementResistance(finalized, enemy);
   double meltVapMultiplier = meltBonus(finalized, enemy);
+
+  if (print) {
+    std::cout << character;
+    std::cout << finalized;
+  }
 
   return baseDMG *
          multipliers *
